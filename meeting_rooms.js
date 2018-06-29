@@ -48,11 +48,12 @@ document.getElementById('clockbox').innerHTML=""+tday[nday]+", "+tmonth[nmonth]+
 			minute = 60 - minute;
 			hour = today.getHours() - 1;
 			compare = hour + ":"  + minute;
-		}
+		} else {
  		hour = today.getHours();
-		//test compare time for the test data, when dealig with other data this should be placed inside an else block 
+		compare = hour + ":" + minute;
+		}
+		//test case default
 		compare = "00:00";
-		
         updatePage(); 
 		});
     
