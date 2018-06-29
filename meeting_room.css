@@ -22,9 +22,11 @@ table, td {
 h2{
     font-size: x-large;
     text-align: center;
+    color: white;
 }
 div{
     font-size: large;
     padding-top: 5px;
     padding-right: 5px;
+    color: white;
 }
