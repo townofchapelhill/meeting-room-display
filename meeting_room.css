@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Yantramanav');
+body {
+    font-size: medium;
+    font-family : 'Yantramanav', sans-serif;
+    color: black;
+    background-color: #666666;
+}
+th {
+color: black;
+ border-collapse: collapse;
+    border: 1px solid black;
+    padding: 5px;
+    font-size: large;
+} 
+table, td {
+    border-collapse: collapse;
+    border: 1px solid black;
+    color: black;
+    background-color: lightgray;
+    padding: 5px;
+}
+h2{
+    font-size: x-large;
+    text-align: center;
+}
+div{
+    font-size: large;
+    padding-top: 5px;
+    padding-right: 5px;
+}
