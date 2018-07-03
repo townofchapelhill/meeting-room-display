@@ -204,7 +204,7 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
 					} else {
 						purpose = "N/A";
 					}
-                    $(".table").append("<tr><td>" + org + "</td><td>" + start + "</td><td>" + end + "</td><td>" + place +  "</td><td>" + purpose + "</td></tr>");
+                    $(".table").append("<tr><td>" + start + "</td><td>" + end + "</td><td>" + org + "</td><td>" + purpose +  "</td><td>" + place + "</td></tr>");
                 }
     } 
 });
