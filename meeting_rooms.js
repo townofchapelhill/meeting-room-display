@@ -5,6 +5,7 @@ var compare;
 var org;
 var start;
 var end;
+var end_;
 var place;
 var start_time = [];
 var time;
@@ -12,6 +13,8 @@ var month;
 var day_;
 var month_;
 var purpose;
+var start;
+var milt;
         
     $(document).ready( function() {
 		
@@ -45,8 +48,7 @@ document.getElementById('clockbox').innerHTML=""+tday[nday]+", "+tmonth[nmonth]+
 
 			today = new Date();
 			month = today.getMonth() + 1;
-			console.log(today.getMonth());
-			console.log(today.getDate());
+
 			time  = today.getTime(); //results in milliseconds
         //to be used for the meetings that have ended within the past thirty minutes or will end later
         minute = today.getMinutes() - 30;
@@ -57,6 +59,9 @@ document.getElementById('clockbox').innerHTML=""+tday[nday]+", "+tmonth[nmonth]+
 			compare = hour + ":"  + minute;
 		} else {
  		hour = today.getHours();
+		if(minute < 10) {
+			minute = "0" + minute;
+		}
 		compare = hour + ":" + minute;
 		}
 		//test case default
@@ -74,8 +79,28 @@ document.getElementById('clockbox').innerHTML=""+tday[nday]+", "+tmonth[nmonth]+
 $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=meeting-room-test-data" ,  function (jsonData)  {
      var count = 0;
     $.each(jsonData.records, function (object, objectData) {
-
-        start_time[count] = objectData.fields.start_time.slice(11,16);
+		//MUST CONVERT TO MILITARY TIME TO CONVERT
+	if(objectData.fields.start_time[1] === ':') {
+		if(objectData.fields.start_time.slice(5) == 'AM') {
+			start = "0" + objectData.fields.start_time.slice(0,4);
+		} else if(objectData.fields.start_time.slice(5) == 'PM') {
+			milt = parseInt(objectData.fields.start_time[0]) + 12;
+			//adding the converted military time to the rest fo the string
+			start = milt + ":" + objectData.fields.start_time.slice(2,4);
+		}
+	} else if(objectData.fields.start_time[2] === ':'){
+		if(objectData.fields.start_time.slice(6) == 'AM') {
+			start = objectData.fields.start_time.slice(0,5);
+		} else if(objectData.fields.start_time.slice(6) == 'PM') {
+			if(objectData.fields.start_time.slice(0,2) == '12'){
+			start = objectData.fields.start_time.slice(0,5);
+		}  else {
+			milt = parseInt(objectData.fields.start_time.slice(0,2)) + 12;
+			start = milt + ":" + objectData.fields.start_time.slice(3,5);
+		}
+		}	
+	}	
+        start_time[count] = start;
         count++;
         if(count == jsonData.records.length) {
             start_time.sort();
@@ -84,13 +109,25 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
 
     var index;
 	var accessed = [];
+	var slicing;
+	var stan;
 	for(var x = 0; x < start_time.length; x++) {
 		accessed[x] = false;
+		slicing = start_time[x];
+		if(parseInt(slicing) > parseInt("12:00") ) {
+			//converting back from military time to standard time for camprisons
+			stan = parseInt(slicing.slice(0,2)) - 12;
+			start_time[x] = stan + ":" + slicing.slice(3);
+		}
+		if(slicing[0] == '0') {
+			//getting rid of the added 0
+			start_time[x] = slicing.slice(1,5);
+		}
 	}
 	
     for(var  i = 0; i < start_time.length; i++) {
         for(var y = 0; y < jsonData.records.length; y++) {
-            if(jsonData.records[y].fields.start_time.slice(11,16) == start_time[i]) {
+            if(jsonData.records[y].fields.start_time.slice(0,5) == start_time[i] || jsonData.records[y].fields.start_time.slice(0,4) == start_time[i]) {
 				if(accessed[y] === false) {
                 index = y;
 				accessed[y] = true;
@@ -118,7 +155,29 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
 			}
 		}
 		
-        if(parseInt(jsonData.records[index].fields.date.slice(4)) === today.getFullYear() && month_ === month && day_ === today.getDate() && jsonData.records[index].fields.end_time.localeCompare(compare) > 0) {
+		if(jsonData.records[index].fields.end_time[1] === ':') {
+		if(jsonData.records[index].fields.end_time.slice(5) == 'AM') {
+			end_ = "0" + jsonData.records[index].fields.end_time.slice(0,4);
+		} else if(jsonData.records[index].fields.end_time.slice(5) == 'PM') {
+			milt = parseInt(jsonData.records[index].fields.end_time[0]) + 12;
+			//adding the converted military time to the rest fo the string
+			end_ = milt + ":" + jsonData.records[index].fields.end_time.slice(2,4);
+		}
+	} else if(jsonData.records[index].fields.end_time[2] === ':'){
+		if(jsonData.records[index].fields.end_time.slice(6) == 'AM') {
+			end_ = jsonData.records[index].fields.end_time.slice(0,5);
+		} else if(jsonData.records[index].fields.end_time.slice(6) == 'PM') {
+			if(jsonData.records[index].fields.end_time.slice(0,2) == '12'){
+			end_ = jsonData.records[index].fields.end_time.slice(0,5);
+		}  else {
+			milt = parseInt(jsonData.records[index].fields.end_time.slice(0,2)) + 12;
+			end_ = milt + ":" + jsonData.records[index].fields.end_time.slice(3,5);
+		}
+		}	
+	}
+
+	
+        if(parseInt(jsonData.records[index].fields.date.slice(4)) === today.getFullYear() && month_ === month && day_ === today.getDate() && end_.localeCompare(compare) > 0) {
                     
                     if(jsonData.records[index].fields.organization !== null) {
                         org = jsonData.records[index].fields.organization;
