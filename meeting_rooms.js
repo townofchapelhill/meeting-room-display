@@ -9,6 +9,8 @@ var place;
 var start_time = [];
 var time;
 var month;
+var day_;
+var month_;
 var purpose;
         
     $(document).ready( function() {
@@ -96,9 +98,27 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
 				} 
 			}
         }
-    
-        if(parseInt(jsonData.records[index].fields.date.slice(4)) === today.getFullYear() && parseInt(jsonData.records[index].fields.date[0]) === month
-                   && parseInt(jsonData.records[index].fields.date[2]) === today.getDate() && jsonData.records[index].fields.end_time.localeCompare(compare) > 0) {
+		
+		if(jsonData.records[index].fields.date[1] === '/') {
+			month_ = parseInt(jsonData.records[index].fields.date[0]);
+			if(jsonData.records[index].fields.date[3] === '/') {
+				day_ = parseInt(jsonData.records[index].fields.date[2]);
+			} else if(jsonData.records[index].fields.date[4] === '/' ) {
+				//handles the case that the day is in double digits
+				day_ = parseInt(jsonData.records[index].fields.date.slice(2,4));
+			}
+		} else if(jsonData.records[index].fields.date[2] === '/') {
+			//handles the case if the month is in the double digits
+			month_ = parseInt(jsonData.records[index].fields.date.slice(0,2));
+			 if(jsonData.records[index].fields.date[4] === '/') {
+				day_ = parseInt(jsonData.records[index].fields.date[3]);
+			} else if(jsonData.records[index].fields.date[5] === '/' ) {
+				//handles the case that the day is in double digits
+				day_ = parseInt(jsonData.records[index].fields.date.slice(3,5));
+			}
+		}
+		
+        if(parseInt(jsonData.records[index].fields.date.slice(4)) === today.getFullYear() && month_ === month && day_ === today.getDate() && jsonData.records[index].fields.end_time.localeCompare(compare) > 0) {
                     
                     if(jsonData.records[index].fields.organization !== null) {
                         org = jsonData.records[index].fields.organization;
