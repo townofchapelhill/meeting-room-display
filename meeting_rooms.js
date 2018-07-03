@@ -8,6 +8,8 @@ var end;
 var place;
 var start_time = [];
 var time;
+var month;
+var purpose;
         
     $(document).ready( function() {
 		
@@ -39,9 +41,12 @@ document.getElementById('clockbox').innerHTML=""+tday[nday]+", "+tmonth[nmonth]+
       window.location.href = window.location.href;
   },(60000 * 30));
 
-			today = new Date(2018, 06, 25);
+			today = new Date();
+			month = today.getMonth() + 1;
+			console.log(today.getMonth());
+			console.log(today.getDate());
 			time  = today.getTime(); //results in milliseconds
-        //to be used for the meetings that ended within the past thirty minutes or later
+        //to be used for the meetings that have ended within the past thirty minutes or will end later
         minute = today.getMinutes() - 30;
 		if(minute < 0) {
 			minute = Math.abs(today.getMinutes()-30);
@@ -53,7 +58,7 @@ document.getElementById('clockbox').innerHTML=""+tday[nday]+", "+tmonth[nmonth]+
 		compare = hour + ":" + minute;
 		}
 		//test case default
-		compare = "00:00";
+		//compare = "00:00";
         updatePage(); 
 		});
     
@@ -69,7 +74,6 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
     $.each(jsonData.records, function (object, objectData) {
 
         start_time[count] = objectData.fields.start_time.slice(11,16);
-        //console.log(start_time[count]);
         count++;
         if(count == jsonData.records.length) {
             start_time.sort();
@@ -85,18 +89,16 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
     for(var  i = 0; i < start_time.length; i++) {
         for(var y = 0; y < jsonData.records.length; y++) {
             if(jsonData.records[y].fields.start_time.slice(11,16) == start_time[i]) {
-				console.log("test");
 				if(accessed[y] === false) {
                 index = y;
-				console.log(y);
 				accessed[y] = true;
 				break;
 				} 
 			}
         }
-        
-        if(parseInt(jsonData.records[index].fields.date.slice(0,4)) === today.getFullYear() && parseInt(jsonData.records[index].fields.date.slice(5,7)) === today.getMonth()
-                   && parseInt(jsonData.records[index].fields.date.slice(8)) === today.getDate() && jsonData.records[index].fields.end_time.slice(11,16).localeCompare(compare) > 0) {
+    
+        if(parseInt(jsonData.records[index].fields.date.slice(4)) === today.getFullYear() && parseInt(jsonData.records[index].fields.date[0]) === month
+                   && parseInt(jsonData.records[index].fields.date[2]) === today.getDate() && jsonData.records[index].fields.end_time.localeCompare(compare) > 0) {
                     
                     if(jsonData.records[index].fields.organization !== null) {
                         org = jsonData.records[index].fields.organization;
@@ -104,24 +106,12 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
                         org = "N/A";
                     }
                     if(jsonData.records[index].fields.start_time !== null) {
-						if(parseInt(jsonData.records[index].fields.start_time.slice(11,13)) > 12) {
-							//handling the military time
-							start = parseInt(jsonData.records[index].fields.start_time.slice(11,13)) - 12;
-							start = start + ":" + jsonData.records[index].fields.start_time.slice(14,16) + "pm";
-						} else {
-                        start = jsonData.records[index].fields.start_time.slice(11,16) + "am";
-						}
+							start = jsonData.records[index].fields.start_time;
                     } else {
                         start = "N/A";
                     }
                     if(jsonData.records[index].fields.end_time !==null) {
-                        if(parseInt(jsonData.records[index].fields.end_time.slice(11,13)) > 12) {
-							//handling the military time
-							end = parseInt(jsonData.records[index].fields.end_time.slice(11,13)) - 12;
-							end = end + ":" + jsonData.records[index].fields.end_time.slice(14,16) + "pm";
-						} else {
-                        end = jsonData.records[index].fields.end_time.slice(11,16) + "am";
-						}
+						end = jsonData.records[index].fields.end_time;
                     } else {
                         end = "N/A";
                     }
@@ -130,7 +120,12 @@ $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=me
                     } else {
                         start = "N/A";
                     }
-                    $(".table").append("<tr><td>" + org + "</td><td>" + start + "</td><td>" + end + "</td><td>" + place +  "</td></tr>");
+					if(jsonData.records[index].fields.purpose !== null) {
+						purpose = jsonData.records[index].fields.purpose;
+					} else {
+						purpose = "N/A";
+					}
+                    $(".table").append("<tr><td>" + org + "</td><td>" + start + "</td><td>" + end + "</td><td>" + place +  "</td><td>" + purpose + "</td></tr>");
                 }
     } 
 });
