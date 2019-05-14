@@ -1,0 +1,56 @@
+.nav {
+    margin-top: 100px;
+}
+
+#header {
+    margin-bottom: 50px;
+}
+
+#date {
+    width: 40%;
+}
+
+h1 {
+    float: left;
+}
+
+#title {
+    margin-left: 10%;
+}
+
+#img {
+    float: right;
+};
+
+#table-holder {
+    margin: 30%;
+    width: 500px;
+}
+
+#reservation-display {
+    margin-left: 10%;
+    text-align: center;
+    align-content: center;
+    border-bottom: 5px solid #4fc4f9;
+};
+
+#table {
+    width: 700px;
+    text-align: center;
+    align-content: center;
+    border-left: 5px solid #4fc4f9;
+    border-bottom: 5px solid #4fc4f9;
+}
+
+.table-row {
+    background-color: #4259a3;
+    border-left: 6px solid #4fc4f9;
+}
+
+.table-section {
+    background-image: url(./assets/3px-tile.png);
+    padding: 3px;
+    height: 50px;
+    color: beige;
+    border: 5px solid #4259a3;
+}

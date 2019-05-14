@@ -72,11 +72,11 @@ document.getElementById('clockbox').innerHTML=""+tday[nday]+", "+tmonth[nmonth]+
     function updatePage() {
    $.ajaxSetup({
         headers : {
-           'Authorization' : 'Basic bWhhbHZvcnNlbjk4QGdtYWlsLmNvbTpCb295YWg5ODE2MjA='
+           'Authorization' : 'Basic 30c2d9f2c74c92715b8bcd740d8f686d69a9d909d857331babb5f659'
         }
     });
    
-$.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=meeting-room-test-data" ,  function (jsonData)  {
+$.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=new_reservations" ,  function (jsonData)  {
      var count = 0;
     $.each(jsonData.records, function (object, objectData) {
 		//MUST CONVERT TO MILITARY TIME TO CONVERT
