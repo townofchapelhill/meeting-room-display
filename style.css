@@ -3,7 +3,7 @@
 }
 
 #header {
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 }
 
 #date {
@@ -15,11 +15,15 @@ h1 {
 }
 
 #title {
-    margin-left: 10%;
+    margin-left: 12%;
+    font-weight: bold;
+    border-bottom: 1px dotted gray;
+    width: 40%;
 }
 
 #img {
     float: right;
+    margin-right: 25%;
 };
 
 #table-holder {
