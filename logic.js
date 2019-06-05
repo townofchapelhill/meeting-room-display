@@ -55,7 +55,7 @@ $(document).ready(function getDate() {
             let dblParseEnd = parseEnd[1].split("-");
             const endTime = moment(dblParseEnd[0], "HH:mm:ss").format("h:mm a");
 
-            const formattedTime = startTime + "-" + endTime;
+            const formattedTime = startTime + " - " + endTime;
 
             var newRes = new Reservation(formattedTime, '', reservations[i].description, reservations[i].location, '', sorter);
             objReservations.push(newRes);
@@ -75,8 +75,17 @@ $(document).ready(function getDate() {
 
     function populateTable(reservations) {
         for (i = 0; i < reservations.length; i++) {
-            $('#table').append("<tr class='table-row'> <td class='table-section'>" + reservations[i].duration + "</td> <td class='table-section'>" + reservations[i].organization + "</td> <td class='table-section'>" + reservations[i].description + "</td> <td class='table-section'>" + reservations[i].location + "</td> <td class='table-section'>" + reservations[i].public + "</td> </tr>");
+            if (i === reservations.length - 1) {
+                $('#table').append("<tr id='table-border'> <td class='table-section'>" + reservations[i].duration + "</td> <td class='table-section'>" + reservations[i].description + "</td> <td class='table-section'>" + reservations[i].location + "</td> <td class='table-section'>" + reservations[i].public + "</td> </tr>");
+                continue
+            };
+            $('#table').append("<tr class='table-row'> <td class='table-section'>" + reservations[i].duration + "</td> <td class='table-section'><div class='table-description'>" + reservations[i].description + "</div></td> <td class='table-section'>" + reservations[i].location + "</td> <td class='table-section'>" + reservations[i].public + "</td> </tr>");
         };
+
+        borderHeight = parseInt($('#table').height()) - 4;
+        borderWidth = parseInt($('#table').width()) + 25;
+        $('#border').css('height', borderHeight + 'px');
+        $('#border').css('width', borderWidth + 'px');
     };
 
 });
